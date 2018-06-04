@@ -3383,5 +3383,8 @@ return array(
     'study_material' => $baseDir . '/app/models/study_material.php',
     'subject' => $baseDir . '/app/models/subject.php',
     'transportation' => $baseDir . '/app/models/transportation.php',
+    'vehicles' => $baseDir . '/app/models/vehicles.php',
+    'vehicle_service' => $baseDir . '/app/models/vehicle_service.php',
+    'driver_details' => $baseDir . '/app/models/driver_details.php',
     'vacation' => $baseDir . '/app/models/vacation.php',
 );
