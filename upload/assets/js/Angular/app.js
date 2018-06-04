@@ -3435,6 +3435,188 @@ schoex.controller('TransportsController', function(dataFactory,$scope,$rootScope
     }
 });
 
+
+
+/********************************
+Vehicles controller
+********************************/
+
+schoex.controller('VehiclesController', function(dataFactory,$scope,$rootScope,$sce) {
+    $scope.vehicles = {};
+    $scope.vehiclesList = {};
+    $scope.views = {};
+    $scope.views.list = true;
+    $scope.form = {};
+    $scope.userRole = $rootScope.dashboardData.role;
+
+
+
+        $scope.showModal = false;
+    $scope.vehicleDetails = function(id){
+        dataFactory.httpRequest('index.php/vehicles/details/'+id).then(function(data) {
+            $scope.modalTitle = data.title;
+            $scope.modalContent = $sce.trustAsHtml(data.content);
+            $scope.showModal = !$scope.showModal;
+        });
+    };
+
+
+    dataFactory.httpRequest('index.php/vehicles/listAll').then(function(data) {
+        $scope.vehicles = data;
+        showHideLoad(true);
+    });
+
+
+
+    $scope.edit = function(vehicle_id){
+        showHideLoad();
+        dataFactory.httpRequest('index.php/vehicles/'+vehicle_id).then(function(data) {
+            $scope.changeView('edit');
+            $scope.form = data;
+            showHideLoad(true);
+        });
+    }
+
+    $scope.saveEdit = function(){
+        showHideLoad();
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+$scope.form = {
+'vehicle_id': $scope.form.vehicle.vehicle_id,
+    'vehicle_number': $scope.form.vehicle.vehicle_number,
+'year': $scope.form.vehicle.year,
+'make': $scope.form.vehicle.make,
+'vehicle_model': $scope.form.vehicle.vehicle_model,
+'type': $scope.form.vehicle.type,
+'capacity': $scope.form.vehicle.capacity,
+'service_type': $scope.form.service.service_type,
+'prev_service_date': formatDate($scope.form.service.prev_service_date),
+'next_service_date': formatDate($scope.form.service.next_service_date),
+'name': $scope.form.driver.name,
+'license_number': $scope.form.driver.license_number,
+'license_issue_date': formatDate($scope.form.driver.license_issue_date),
+'license_expiry_date': formatDate($scope.form.driver.license_expiry_date),
+'work_begin_date': formatDate($scope.form.driver.work_begin_date),
+'work_end_date': formatDate($scope.form.driver.work_end_date)
+}
+
+        
+        dataFactory.httpRequest('index.php/vehicles/'+$scope.form.vehicle_id,'POST',{},$scope.form).then(function(data) {
+
+            response = apiResponse(data,'edit');
+
+            if(data.status == "success"){
+                //$scope.vehicles = apiModifyTable($scope.vehicles,response.vehicle_id,response);
+                $scope.changeView('list');
+            }
+            showHideLoad(true);
+        });
+    }
+
+    $scope.remove = function(item,index){
+        var confirmRemove = confirm($rootScope.phrase.sureRemove);
+        if (confirmRemove == true) {
+            showHideLoad();
+
+            dataFactory.httpRequest('index.php/vehicles/delete/'+item.vehicle_id,'POST').then(function(data) {
+                response = apiResponse(data,'remove');
+                if(data.status == "success"){
+                    $scope.vehicles.splice(index,1);
+                }
+                showHideLoad(true);
+            });
+        }
+    }
+
+
+    $scope.saveAdd = function(){
+        showHideLoad();
+        
+        function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+        $scope.form = {
+'vehicle_id': $scope.form.vehicle_id,
+    'vehicle_number': $scope.form.vehicle_number,
+'year': $scope.form.year,
+'make': $scope.form.make,
+'vehicle_model': $scope.form.vehicle_model,
+'type': $scope.form.type,
+'capacity': $scope.form.capacity,
+'service_type': $scope.form.service_type,
+'prev_service_date': formatDate($scope.form.prev_service_date),
+'next_service_date': formatDate($scope.form.next_service_date),
+'name': $scope.form.name,
+'license_number': $scope.form.license_number,
+'license_issue_date': formatDate($scope.form.license_issue_date),
+'license_expiry_date': formatDate($scope.form.license_expiry_date),
+'work_begin_date': formatDate($scope.form.work_begin_date),
+'work_end_date': formatDate($scope.form.work_end_date)
+}
+
+
+        dataFactory.httpRequest('index.php/vehicles','POST',{},$scope.form).then(function(data) {
+            response = apiResponse(data,'add');
+            if(data.status == "success"){
+                $scope.vehicles.push(response);
+                $scope.changeView('list');
+            }
+            showHideLoad(true);
+        });
+    }
+
+    $scope.list = function(id){
+        showHideLoad();
+        dataFactory.httpRequest('index.php/vehicles/list/'+id).then(function(data) {
+            $scope.changeView('listSubs');
+            $scope.vehiclesList = data;
+            showHideLoad(true);
+        });
+    }
+
+     
+
+    $scope.changeView = function(view){
+        if(view == "add" || view == "list" || view == "show"){
+            $scope.form = {};
+        }
+        $scope.views.list = false;
+        $scope.views.add = false;
+        $scope.views.edit = false;
+        $scope.views.listSubs = false;
+        $scope.views[view] = true;
+    }
+
+});
+
+
+
+    
+
+
+
+
+
 schoex.controller('mediaController', function($rootScope,dataFactory,$scope) {
     $scope.albums = {};
     $scope.media = {};
