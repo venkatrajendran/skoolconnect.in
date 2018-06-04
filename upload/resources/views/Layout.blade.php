@@ -117,7 +117,7 @@
                                 </ul>
                             </div>
                         </li>
-                        <?php if( $panelInit->settingsArray['languageAllow'] == "1" ){ ?>
+                        <?php /* if( $panelInit->settingsArray['languageAllow'] == "1" ){ ?>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="flag-icon flag-icon-us"></i></a>
                                 <div class="dropdown-menu  dropdown-menu-right">
@@ -126,7 +126,7 @@
                                     <?php } ?>
                                 </div>
                             </li>
-                        <?php } ?>
+                        <?php } */ ?>
 
 
                         <li class="nav-item dropdown">
@@ -166,14 +166,27 @@
                 <!-- End User profile text-->
                 <!-- Sidebar navigation-->
                 <nav class="sidebar-nav">
+
                     <ul id="sidebarnav" <?php if($panelInit->settingsArray['leftmenuScroller'] != "e"){ echo "style='padding-bottom:60px;'"; }?>>
+                          
                         <?php
                         if($users->role == "admin" AND $users->customPermissionsType == "custom"){
                             $userPerm = $users->customPermissionsAsJson();
                             $performPermScan = true;
                         }
-
+                        $ss = 0;
                         while (list($key, $value) = each($panelInit->panelItems)) {
+
+                            /**
+                            Hard code for fleet management
+                            **/
+
+                            
+
+                            if(++$ss == 2)
+                            {
+                                echo "<li><a class='aj scrollTop' href='".URL::to('#/vehicles')."' aria-expanded='false'><i class='mdi mdi-account-multiple-outline'></i><span class='hide-menu'>Fleet Management</span></a>";
+                            }
                             if(isset($value['activated']) AND !strpos($panelInit->settingsArray['activatedModules'],$value['activated']) ){ continue;  }
                             if(!in_array($users->role, $value['permissions'])){
                                 continue;
@@ -183,6 +196,9 @@
                                     continue;
                                 }
                             }
+							if("gradeLevels" == $value['title'] || "newsboard" == $value['title'])
+									{}
+									else {
                             echo "<li><a ";
                             if(isset($value['children'])){
                                 echo "class='has-arrow'";
@@ -213,6 +229,9 @@
                                             continue;
                                         }
                                     }
+									if("gradeLevels" == $value2['title'] || "newsboard" == $value2['title'])
+									{}
+									else {
                                     echo "<li>";
                                     echo "<a class='aj scrollTop' href='".URL::to($value2['url'])."'>";
                                     if(isset($panelInit->language[$value2['title']])){
@@ -222,10 +241,12 @@
                                     }
                                     echo "</a>";
                                     echo "</li>";
+									}
                                 }
                                 echo "</ul>";
                             }
                             echo "</li>";
+									}
                         }
                         ?>
                     </ul>
