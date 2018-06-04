@@ -345,6 +345,16 @@ schoex.config(function($routeProvider,$locationProvider) {
         }
     })
 
+    .when('/vehicles', {
+        templateUrl : 'assets/templates/vehicles.html',
+        controller  : 'VehiclesController',
+        resolve: {
+            essentialData: function(srvLibrary) {
+                return srvLibrary.getEssentials();
+            }
+        }
+    })
+
     .when('/settings', {
         templateUrl : 'assets/templates/settings.html',
         controller  : 'settingsController',
