@@ -504,5 +504,17 @@ Route::group( array('middleware'=>'web') ,function(){
 	Route::get('/hostelCat/{id}','hostelCatController@fetch');
     Route::post('/hostelCat/delete/{id}','hostelCatController@delete');
 	Route::post('/hostelCat/{id}','hostelCatController@edit');
+
+
+	//Vehicles
+	Route::get('/vehicles','DashboardController@index');
+	Route::get('/vehicles/listAll','VehiclesController@listAll');
+	Route::get('/vehicles/list/{id}','VehiclesController@fetchSubs');
+	Route::post('/vehicles','VehiclesController@create');
+	Route::get('/vehicles/{id}','VehiclesController@fetch');
+    Route::post('/vehicles/delete/{id}','VehiclesController@delete');
+	Route::post('/vehicles/{id}','VehiclesController@edit');
+	Route::get('/vehicles/details/{id}','VehiclesController@details');
+	Route::get('/vehicles/service_cron','VehiclesController@service_cron');
 });
 Route::post('/invoices/success/{id}','invoicesController@paymentSuccess');
