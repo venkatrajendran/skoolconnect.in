@@ -3813,6 +3813,9 @@ class ComposerStaticInit28d087eedb98023638c550126602bcda
         'study_material' => __DIR__ . '/../..' . '/app/models/study_material.php',
         'subject' => __DIR__ . '/../..' . '/app/models/subject.php',
         'transportation' => __DIR__ . '/../..' . '/app/models/transportation.php',
+        'vehicles' => __DIR__ . '/../..' .  '/app/models/vehicles.php',
+        'vehicle_service' => __DIR__ . '/../..' .  '/app/models/vehicle_service.php',
+        'driver_details' => __DIR__ . '/../..' .  '/app/models/driver_details.php',
         'vacation' => __DIR__ . '/../..' . '/app/models/vacation.php',
     );
 
