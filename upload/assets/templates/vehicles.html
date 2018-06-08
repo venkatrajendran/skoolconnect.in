@@ -18,13 +18,13 @@
                         <span class="input-group-addon"><i class="fa fa-search"></i></span>
                     </div>
                 </div>
-                <h4 class="card-title">Vehicle List</h4>
+                <h4 style="font-weight: bold;" class="card-title">Vehicle List</h4>
                 <div class="table-responsive">
 
                     <table class="table table-bordered table-hover">
                         <tbody>
                             <tr>
-                                <th>License Number</th>
+                                <th>Vehicle Number</th>
                                 <th>Year</th>
                                 <th>Make</th>
                                 <th>Model</th>
@@ -34,7 +34,7 @@
                             </tr>
                             <tr ng-repeat="vehicle in vehicles | filter:searchText">
                                 <td>
-<a href="" ng-click="vehicleDetails( vehicle.vehicle_id )">{{vehicle.license_number}}</a>
+<a href="" ng-click="vehicleDetails( vehicle.vehicle_id )">{{vehicle.vehicle_number}}</a>
                                 </td>
                                 <td>{{vehicle.year}}</td>
                                 <td>{{vehicle.make}}</td>
@@ -61,7 +61,7 @@
         <div class="card">
             <div class="card-block">
                 <button ng-click="changeView('list')" class="btn btn-danger btn-flat pull-right card-block-input-item">Cancel Add</button>
-                <h4 class="card-title">Vehicle details</h4>
+                <h4 style="font-weight: bold;" class="card-title">Vehicle details</h4>
                 <div class="table-responsive">
 
                     <form class="form-horizontal" name="addvehicles" role="form" ng-submit="saveAdd()" novalidate>
@@ -106,8 +106,8 @@
                                 <input type="text" name="capacity" ng-model="form.capacity" class="form-control" placeholder="Capacity">
                             </div>
                         </div>
-
-                        <h4 class="card-title">Service details</h4>    
+                        <hr style="border: 1px solid #000;">
+                        <h4 style="font-weight: bold;" class="card-title">Service details <button type="button" ng-click="addVehiclesRow()" class="btn pull-right btn-danger card-block-input-item">Add New Service</button></h4>    
                         <div class="form-group row" ng-class="{'has-error': addvehicles.service_type.$invalid}">
                             <label class="col-sm-2 control-label">Service Type * </label>
                             <div class="col-sm-10">
@@ -117,7 +117,7 @@
                         <div class="form-group row" ng-class="{'has-error': addvehicles.prev_service_date.$invalid}">
                             <label class="col-sm-2 control-label">Previous Service Date *</label>
                             <div class="col-sm-10">
-                                <input type="text" name="prev_service_date" ng-model="form.prev_service_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="Previous Service Date">
+                                <input type="text" name="prev_service_date" ng-model="form.prev_service_date" class="form-control datemask-transport" date-picker ng-readonly="true"  required placeholder="Previous Service Date" min="2018-06-06">
                             </div>
                         </div>
 
@@ -127,11 +127,35 @@
                             <div class="col-sm-10">
                                 <input type="text" name="next_service_date" ng-model="form.next_service_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="Next Service Date">
                             </div>
+
+                        </div>
+                        
+                        <div ng-repeat="(key,row) in form.vehiclesmul">
+                            <div class="form-group row" ng-class="{'has-error': addvehicles.service_type.$invalid}">
+                            <label class="col-sm-2 control-label">Service Type * </label>
+                            <div class="col-sm-10">
+                                <input type="text" name="service_type" ng-model="row.service_type" class="form-control" required placeholder="Service Type">
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-class="{'has-error': addvehicles.prev_service_date.$invalid}">
+                            <label class="col-sm-2 control-label">Previous Service Date *</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="prev_service_date" ng-model="row.prev_service_date" class="form-control datemask-transport" date-picker ng-readonly="true"  required placeholder="Previous Service Date" min="2018-06-06">
+                            </div>
                         </div>
 
-                        
 
-                        <h4 class="card-title">Driver details</h4> 
+                        <div class="form-group row" ng-class="{'has-error': addvehicles.next_service_date.$invalid}">
+                            <label class="col-sm-2 control-label">Next Service Date *</label>
+                            <div class="col-sm-10">
+                                <input style="width: 90%;" type="text" name="next_service_date" ng-model="row.next_service_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="Next Service Date"><button style="margin-left: 3%;" ng-click="removeRow(row,$index)" type="button" class="btn btn-danger btn-circle" title="{{phrase.Remove}}" tooltip><i class="fa fa-trash-o"></i></button>
+                            </div>
+                        </div>
+
+                        </div>
+                        
+                        <hr style="border: 1px solid #000;">
+                        <h4 style="font-weight: bold;" class="card-title">Driver details</h4> 
                         <div class="form-group row" ng-class="{'has-error': addvehicles.name.$invalid}">
                             <label class="col-sm-2 control-label">Name * </label>
                             <div class="col-sm-10">
@@ -149,7 +173,7 @@
                         <div class="form-group row" ng-class="{'has-error': addvehicles.license_issue_date.$invalid}">
                             <label class="col-sm-2 control-label">License Issue Date *</label>
                             <div class="col-sm-10">
-                                <input type="text" name="license_issue_date" ng-model="form.license_issue_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="License Issue Date">
+                                <input type="text" name="license_issue_date" ng-model="form.license_issue_date" class="form-control datemask-transport" date-picker ng-readonly="true"  required placeholder="License Issue Date">
                             </div>
                         </div>
 
@@ -163,14 +187,14 @@
                         <div class="form-group row" ng-class="{'has-error': addvehicles.work_begin_date.$invalid}">
                             <label class="col-sm-2 control-label">Work Begin Date *</label>
                             <div class="col-sm-10">
-                                <input type="text" name="work_begin_date" ng-model="form.work_begin_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="Work Begin Date">
+                                <input type="text" name="work_begin_date" ng-model="form.work_begin_date" class="form-control datemask-transport" date-picker ng-readonly="true"  required placeholder="Work Begin Date">
                             </div>
                         </div>
 
                         <div class="form-group row" ng-class="{'has-error': addvehicles.work_end_date.$invalid}">
                             <label class="col-sm-2 control-label">Work End Date *</label>
                             <div class="col-sm-10">
-                                <input type="text" name="work_end_date" ng-model="form.work_end_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="Work End Date">
+                                <input type="text" name="work_end_date" ng-model="form.work_end_date" class="form-control datemask" date-picker ng-readonly="true"  placeholder="Work End Date">
                             </div>
                         </div>
                         <div class="form-group m-b-0">
@@ -191,7 +215,7 @@
         <div class="card">
             <div class="card-block">
                 <button ng-click="changeView('list')" class="btn btn-danger btn-flat pull-right card-block-input-item">Cancel Edit</button>
-                <h4 class="card-title">Edit Vehicles</h4>
+                <h4 style="font-weight: bold;" class="card-title">Edit Vehicles</h4>
                 <div class="table-responsive">
 
                     <form class="form-horizontal" name="editvehicles" role="form" ng-submit="saveEdit()" novalidate>
@@ -236,8 +260,8 @@
                                 <input type="text" name="capacity" ng-model="form.vehicle.capacity" class="form-control" placeholder="Capacity">
                             </div>
                         </div>
-
-                        <h4 class="card-title">Service details</h4>    
+                        <hr style="border: 1px solid #000;">
+                        <h4 style="font-weight: bold;" class="card-title">Service details <button type="button" ng-click="addVehiclesRow()" class="btn pull-right btn-danger card-block-input-item">Add New Service</button></h4>    
                         <div class="form-group row" ng-class="{'has-error': editvehicles.service_type.$invalid}">
                             <label class="col-sm-2 control-label">Service Type * </label>
                             <div class="col-sm-10">
@@ -247,7 +271,7 @@
                         <div class="form-group row" ng-class="{'has-error': editvehicles.prev_service_date.$invalid}">
                             <label class="col-sm-2 control-label">Previous Service Date *</label>
                             <div class="col-sm-10">
-                                <input type="text" name="prev_service_date" ng-model="form.service.prev_service_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="Previous Service Date">
+                                <input type="text" name="prev_service_date" ng-model="form.service.prev_service_date" class="form-control datemask-transport" date-picker ng-readonly="true"  required placeholder="Previous Service Date">
                             </div>
                         </div>
 
@@ -258,10 +282,32 @@
                                 <input type="text" name="next_service_date" ng-model="form.service.next_service_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="Next Service Date">
                             </div>
                         </div>
+                        <div ng-repeat="(key,row) in form.vehiclesmul">
+                            <div class="form-group row" ng-class="{'has-error': addvehicles.service_type.$invalid}">
+                            <label class="col-sm-2 control-label">Service Type * </label>
+                            <div class="col-sm-10">
+                                <input type="text" name="service_type" ng-model="row.service_type" class="form-control" required placeholder="Service Type">
+                            </div>
+                        </div>
+                        <div class="form-group row" ng-class="{'has-error': addvehicles.prev_service_date.$invalid}">
+                            <label class="col-sm-2 control-label">Previous Service Date *</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="prev_service_date" ng-model="row.prev_service_date" class="form-control datemask-transport" date-picker ng-readonly="true"  required placeholder="Previous Service Date" min="2018-06-06">
+                            </div>
+                        </div>
 
-                        
 
-                        <h4 class="card-title">Driver details</h4> 
+                        <div class="form-group row" ng-class="{'has-error': addvehicles.next_service_date.$invalid}">
+                            <label class="col-sm-2 control-label">Next Service Date *</label>
+                            <div class="col-sm-10">
+                                <input style="width: 90%;" type="text" name="next_service_date" ng-model="row.next_service_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="Next Service Date"><button style="margin-left: 3%;" ng-click="removeRow(row,$index)" type="button" class="btn btn-danger btn-circle" title="{{phrase.Remove}}" tooltip><i class="fa fa-trash-o"></i></button>
+                            </div>
+                        </div>
+
+                        </div>
+                        <hr style="border: 1px solid #000;">
+
+                        <h4 style="font-weight: bold;" class="card-title">Driver details</h4> 
                         <div class="form-group row" ng-class="{'has-error': editvehicles.name.$invalid}">
                             <label class="col-sm-2 control-label">Name * </label>
                             <div class="col-sm-10">
@@ -279,7 +325,7 @@
                         <div class="form-group row" ng-class="{'has-error': editvehicles.license_issue_date.$invalid}">
                             <label class="col-sm-2 control-label">License Issue Date *</label>
                             <div class="col-sm-10">
-                                <input type="text" name="license_issue_date" ng-model="form.driver.license_issue_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="License Issue Date">
+                                <input type="text" name="license_issue_date" ng-model="form.driver.license_issue_date" class="form-control datemask-transport" date-picker ng-readonly="true"  required placeholder="License Issue Date">
                             </div>
                         </div>
 
@@ -293,14 +339,14 @@
                         <div class="form-group row" ng-class="{'has-error': editvehicles.work_begin_date.$invalid}">
                          <label class="col-sm-2 control-label">Work Begin Date *</label>
                             <div class="col-sm-10">
-                                <input type="text" name="work_begin_date" ng-model="form.driver.work_begin_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="Work Begin Date">
+                                <input type="text" name="work_begin_date" ng-model="form.driver.work_begin_date" class="form-control datemask-transport" date-picker ng-readonly="true"  required placeholder="Work Begin Date">
                             </div>
                         </div>
 
                         <div class="form-group row" ng-class="{'has-error': editvehicles.work_end_date.$invalid}">
                             <label class="col-sm-2 control-label">Work End Date *</label>
                             <div class="col-sm-10">
-                                <input type="text" name="work_end_date" ng-model="form.driver.work_end_date" class="form-control datemask" date-picker ng-readonly="true"  required placeholder="Work End Date">
+                                <input type="text" name="work_end_date" ng-model="form.driver.work_end_date" class="form-control datemask" date-picker ng-readonly="true"  placeholder="Work End Date">
                             </div>
                         </div>
                         <div class="form-group m-b-0">
