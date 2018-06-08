@@ -3447,6 +3447,7 @@ schoex.controller('VehiclesController', function(dataFactory,$scope,$rootScope,$
     $scope.views = {};
     $scope.views.list = true;
     $scope.form = {};
+    $scope.form.vehiclesmul = {};
     $scope.userRole = $rootScope.dashboardData.role;
 
 
@@ -3461,6 +3462,19 @@ schoex.controller('VehiclesController', function(dataFactory,$scope,$rootScope,$
     };
 
 
+    $scope.addVehiclesRow = function(){
+        if(typeof $scope.form.vehiclesmul == "undefined"){
+            $scope.form.vehiclesmul = [];
+        }
+        $scope.form.vehiclesmul.push( {'service_type':'','prev_service_date':'','next_service_date':''} );
+        console.log($scope.form.vehiclesmul);
+    }
+
+    $scope.removeRow = function(row,index){
+        $scope.form.vehiclesmul.splice(index,1);
+    }
+
+
     dataFactory.httpRequest('index.php/vehicles/listAll').then(function(data) {
         $scope.vehicles = data;
         showHideLoad(true);
@@ -3472,6 +3486,7 @@ schoex.controller('VehiclesController', function(dataFactory,$scope,$rootScope,$
         showHideLoad();
         dataFactory.httpRequest('index.php/vehicles/'+vehicle_id).then(function(data) {
             $scope.changeView('edit');
+            console.log(data);
             $scope.form = data;
             showHideLoad(true);
         });
@@ -3508,7 +3523,8 @@ $scope.form = {
 'license_issue_date': formatDate($scope.form.driver.license_issue_date),
 'license_expiry_date': formatDate($scope.form.driver.license_expiry_date),
 'work_begin_date': formatDate($scope.form.driver.work_begin_date),
-'work_end_date': formatDate($scope.form.driver.work_end_date)
+'work_end_date': formatDate($scope.form.driver.work_end_date),
+'vehiclesmul': $scope.form.vehiclesmul
 }
 
         
@@ -3520,6 +3536,7 @@ $scope.form = {
                 //$scope.vehicles = apiModifyTable($scope.vehicles,response.vehicle_id,response);
                 $scope.changeView('list');
             }
+            window.location.reload();
             showHideLoad(true);
         });
     }
@@ -3534,6 +3551,7 @@ $scope.form = {
                 if(data.status == "success"){
                     $scope.vehicles.splice(index,1);
                 }
+                window.location.reload();
                 showHideLoad(true);
             });
         }
@@ -3571,7 +3589,8 @@ $scope.form = {
 'license_issue_date': formatDate($scope.form.license_issue_date),
 'license_expiry_date': formatDate($scope.form.license_expiry_date),
 'work_begin_date': formatDate($scope.form.work_begin_date),
-'work_end_date': formatDate($scope.form.work_end_date)
+'work_end_date': formatDate($scope.form.work_end_date),
+'vehiclesmul': $scope.form.vehiclesmul
 }
 
 
@@ -3581,6 +3600,7 @@ $scope.form = {
                 $scope.vehicles.push(response);
                 $scope.changeView('list');
             }
+            window.location.reload();
             showHideLoad(true);
         });
     }
