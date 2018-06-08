@@ -89,7 +89,15 @@ class DashboardInit {
 									),
 
 
-									"transportations"=>array("title"=>"Transportation","url"=>URL::to('#/transports'),"icon"=>"mdi mdi-bus","activated"=>"transportAct","cusPerm"=>"Transportation","permissions"=>array('admin','teacher','student','parent') ),
+									/*"transportations"=>array("title"=>"Transportation","url"=>URL::to('#/transports'),"icon"=>"mdi mdi-bus","activated"=>"transportAct","cusPerm"=>"Transportation","permissions"=>array('admin','teacher','student','parent') ),*/
+
+
+									"transportations"=>array("title"=>"Transportation","icon"=>"mdi mdi-bus","cusPerm"=>"classes","permissions"=>array('admin','teacher','student','parent'),
+														"children"=>array(
+															"transportations"=>array("title"=>"Transportation","url"=>URL::to('#/transports'),"permissions"=>array('admin','teacher','student','parent') ),
+															"vehicles"=>array("title"=>"Fleet Management","url"=>URL::to('#/vehicles'),"permissions"=>array('admin','teacher','student','parent') ),
+														)),
+
 
 									"classes"=>array("title"=>"classes","icon"=>"mdi mdi-sitemap","cusPerm"=>"classes","permissions"=>array('admin'),
 														"children"=>array(
