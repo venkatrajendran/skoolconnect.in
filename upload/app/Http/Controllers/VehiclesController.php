@@ -42,6 +42,7 @@ class VehiclesController extends Controller {
     ->select('vehicles.*','vehicle-service.*','driver-details.*')
     ->leftJoin('vehicle-service','vehicles.vehicle_id','=','vehicle-service.vehicle_id')
     ->leftJoin('driver-details','vehicles.vehicle_id','=','driver-details.vehicle_id')
+    ->orderBy('vehicles.vehicle_id', 'desc')
     ->get();
 
 
@@ -77,11 +78,29 @@ return $data;
 		$vehicles->save();
 
 		$vehicle_id = $vehicles->id;
-		$service = new \vehicle_service();
-		$service->vehicle_id = $vehicle_id;
+		$service1 = new \vehicle_service();
+		$service1->vehicle_id = $vehicle_id;
+		$service1->service_type = \Input::get('service_type');
+		$service1->prev_service_date = \Input::get('prev_service_date');
+		$service1->next_service_date = \Input::get('next_service_date');		
+		$service1->save();
+		if(!empty(\Input::get('vehiclesmul'))){
+			$vehiclesmul = \Input::get('vehiclesmul');
+			while (list($key, $value) = each($vehiclesmul)) {
+			$service = new \vehicle_service();
+			$service->vehicle_id = $vehicle_id;
+			$service->service_type = 	$vehiclesmul[$key]['service_type'];
+			$service->prev_service_date = 	date("Y-m-d", strtotime($vehiclesmul[$key]['prev_service_date']));
+			$service->next_service_date = 	date("Y-m-d", strtotime($vehiclesmul[$key]['next_service_date']));
+			$service->save();
+			}
+		}
+
+		/*
 		$service->service_type = \Input::get('service_type');
 		$service->prev_service_date = \Input::get('prev_service_date');
 		$service->next_service_date = \Input::get('next_service_date');
+		*/
 		/*
 		$prev_service_date = explode('/', \Input::get('prev_service_date'));
 		$prev_service_date = $prev_service_date[2]."-".$prev_service_date[1]."-".$prev_service_date[0];
@@ -91,11 +110,12 @@ return $data;
 
 		$service->next_service_date = $next_service_date;
 		*/
-		$service->save();
+		//$service->save();
 
 		$driver = new \driver_details();
 		$driver->vehicle_id = $vehicle_id;
 		$driver->name = \Input::get('name');
+		$driver->license_number = \Input::get('license_number');
 		$driver->license_issue_date = \Input::get('license_issue_date');
 		$driver->license_expiry_date = \Input::get('license_expiry_date');
 		$driver->work_begin_date = \Input::get('work_begin_date');
@@ -124,8 +144,33 @@ return $data;
 
 		$vehicle = \vehicles::where('vehicle_id',$id)->first();
 		$service = \vehicle_service::where('vehicle_id',$id)->first();
+		$vehiclesmul = \vehicle_service::where('vehicle_id',$id)->get()->toArray();
+
+		if(!empty($vehiclesmul)){
+
+			foreach ($vehiclesmul as $key => $value) {
+				if($service->service_id != $value['service_id'])
+				{
+				$vehiclesmul2[$key]['service_type'] = $value['service_type'];
+				$vehiclesmul2[$key]['prev_service_date'] = $value['prev_service_date'];
+				$vehiclesmul2[$key]['next_service_date'] = $value['next_service_date'];
+			}
+			}
+
+/*
+			while (list($key, $value) = each($vehiclesmul)) {
+				$vehiclesmul2[$key]['service_type'] = print_r($vehiclesmul);
+				$vehiclesmul2[$key]['prev_service_date'] = print_r($vehiclesmul);
+				$vehiclesmul2[$key]['next_service_date'] = print_r($vehiclesmul);
+			}
+			*/
+		}else{
+			$vehiclesmul2['vehiclesmul'] = array();
+		}
+
+
 		$driver = \driver_details::where('vehicle_id',$id)->first();
-		$data = [ 'vehicle' => $vehicle, 'service' => $service, 'driver' => $driver];
+		$data = [ 'vehicle' => $vehicle, 'service' => $service,'vehiclesmul' => $vehiclesmul2, 'driver' => $driver];
 
 
 		
@@ -159,11 +204,32 @@ return $data;
 		'type' => \Input::get('type'),
 		'capacity' => \Input::get('capacity')]);
 
+/*
             DB::table('vehicle-service')
             ->where('vehicle_id', $id)
             ->update(['service_type' => \Input::get('service_type'),
 		'prev_service_date' => \Input::get('prev_service_date'),
 		'next_service_date' => \Input::get('next_service_date')]);
+*/
+		DB::table('vehicle-service')->where('vehicle_id', $id)->delete();
+            $vehicle_id = $id;
+		$service1 = new \vehicle_service();
+		$service1->vehicle_id = $vehicle_id;
+		$service1->service_type = \Input::get('service_type');
+		$service1->prev_service_date = \Input::get('prev_service_date');
+		$service1->next_service_date = \Input::get('next_service_date');		
+		$service1->save();
+		if(!empty(\Input::get('vehiclesmul'))){
+			$vehiclesmul = \Input::get('vehiclesmul');
+			while (list($key, $value) = each($vehiclesmul)) {
+			$service = new \vehicle_service();
+			$service->vehicle_id = $vehicle_id;
+			$service->service_type = 	$vehiclesmul[$key]['service_type'];
+			$service->prev_service_date = 	date("Y-m-d", strtotime($vehiclesmul[$key]['prev_service_date']));
+			$service->next_service_date = 	date("Y-m-d", strtotime($vehiclesmul[$key]['next_service_date']));
+			$service->save();
+			}
+		}
 
             DB::table('driver-details')
             ->where('vehicle_id', $id)
@@ -207,12 +273,12 @@ return $data;
 
 	public function details($id){
 		$vehicle = \vehicles::where('vehicle_id',$id)->first();
-		$service = \vehicle_service::where('vehicle_id',$id)->first();
+		$service = \vehicle_service::where('vehicle_id',$id)->get();
 		$driver = \driver_details::where('vehicle_id',$id)->first();
 
 		if($vehicle->count() > 0){
 			$vehicle = $vehicle->toArray();
-			$service = $service->toArray();
+			$service = $service;
 			$driver = $driver->toArray();
 			
 
@@ -250,20 +316,21 @@ return $data;
 	                          </tr></table>";
 
 	           $return['content'] .= "<h4>Vehicle service Details</h4>";
-
-			$return['content'] .= "<table class='table table-bordered'><tbody>
+	           $return['content'] .= "<table class='table table-bordered'><thead>
+	           <tr><th>Service Type</th><th>Prev Service Date</th><th>Next Service Date</th></tr>
+	           </thead>
+	           <tbody>";
+	           foreach ($service as $key => $value) {
+	        	$return['content'] .= "
 	                          <tr>
-	                              <td>Service Type</td>
-	                              <td>".$service['service_type']."</td>
-	                          </tr>
-	                          <tr>
-	                              <td>Prev Service Date</td>
-	                              <td>".$service['prev_service_date']."</td>
-	                          </tr>
-	                          <tr>
-	                              <td>Next Service Date</td>
-	                              <td>".$service['next_service_date']."</td>
-	                          </tr></table>";               
+	                              <td>".$value->service_type."</td>
+	                          
+	                              <td>".$value->prev_service_date."</td>
+	                          
+	                              <td>".$value->next_service_date."</td>
+	                          </tr>";                  	
+	           }
+			$return['content'] .= "</tbody></table>";
 
 	          $return['content'] .= "<h4>Driver Details</h4>";
 
