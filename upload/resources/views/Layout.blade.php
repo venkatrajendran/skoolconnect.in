@@ -182,11 +182,12 @@
                             **/
 
                             
-
+                            /*
                             if(++$ss == 2)
                             {
                                 echo "<li><a class='aj scrollTop' href='".URL::to('#/vehicles')."' aria-expanded='false'><i class='mdi mdi-account-multiple-outline'></i><span class='hide-menu'>Fleet Management</span></a>";
                             }
+                            */
                             if(isset($value['activated']) AND !strpos($panelInit->settingsArray['activatedModules'],$value['activated']) ){ continue;  }
                             if(!in_array($users->role, $value['permissions'])){
                                 continue;
