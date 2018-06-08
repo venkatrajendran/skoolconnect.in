@@ -732,8 +732,12 @@ schoex.directive('datePicker', function($parse, $timeout,$rootScope){
 
                 if(typeof attrs.id == "undefined"){
                     $(".datemask").calendarsPicker({calendar: calendar,dateFormat:dateformat,showAnim:''});
+                    //$(".datemask-transport").calendarsPicker({calendar: calendar,dateFormat:dateformat,showAnim:'',maxDate: 0});
                 }else{
                     $("#"+attrs.id).calendarsPicker({calendar: calendar,dateFormat:dateformat,showAnim:''});
+                }
+                if(typeof attrs.id == "undefined"){
+                    $(".datemask-transport").calendarsPicker({calendar: calendar,dateFormat:dateformat,showAnim:'',maxDate: 0});
                 }
             };
         }
