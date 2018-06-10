@@ -115,6 +115,7 @@ return $data;
 		$driver = new \driver_details();
 		$driver->vehicle_id = $vehicle_id;
 		$driver->name = \Input::get('name');
+		$driver->phone = trim(\Input::get('phone'));
 		$driver->license_number = \Input::get('license_number');
 		$driver->license_issue_date = \Input::get('license_issue_date');
 		$driver->license_expiry_date = \Input::get('license_expiry_date');
@@ -157,6 +158,11 @@ return $data;
 			}
 			}
 
+
+if(empty($vehiclesmul2))
+{
+	$vehiclesmul2 = array();
+}
 /*
 			while (list($key, $value) = each($vehiclesmul)) {
 				$vehiclesmul2[$key]['service_type'] = print_r($vehiclesmul);
@@ -165,7 +171,7 @@ return $data;
 			}
 			*/
 		}else{
-			$vehiclesmul2['vehiclesmul'] = array();
+			$vehiclesmul2 = array();
 		}
 
 
@@ -234,6 +240,7 @@ return $data;
             DB::table('driver-details')
             ->where('vehicle_id', $id)
             ->update(['name' => \Input::get('name'),
+            	'phone' => trim(\Input::get('phone')),
 		'license_number' => \Input::get('license_number'),
 		'license_issue_date' => \Input::get('license_issue_date'),
 		'license_expiry_date' => \Input::get('license_expiry_date'),
@@ -291,43 +298,43 @@ return $data;
 
 			$return['content'] .= "<table class='table table-bordered'><tbody>
 	                          <tr>
-	                              <td>License Plate Number</td>
-	                              <td>".$driver['license_number']."</td>
+	                              <td align='right'>Vehicle Number</td>
+	                              <td align='right'>".$vehicle['vehicle_number']."</td>
 	                          </tr>
 	                          <tr>
-	                              <td>Year</td>
-	                              <td>".$vehicle['year']."</td>
+	                              <td align='right'>Year</td>
+	                              <td align='right'>".$vehicle['year']."</td>
 	                          </tr>
 	                          <tr>
-	                              <td>Make</td>
-	                              <td>".$vehicle['make']."</td>
+	                              <td align='right'>Make</td>
+	                              <td align='right'>".$vehicle['make']."</td>
 	                          </tr>
 	                          <tr>
-	                              <td>Model</td>
-	                              <td>".$vehicle['vehicle_model']."</td>
+	                              <td align='right'>Model</td>
+	                              <td align='right'>".$vehicle['vehicle_model']."</td>
 	                          </tr>
 	                          <tr>
-	                              <td>Type</td>
-	                              <td>".$vehicle['type']."</td>
+	                              <td align='right'>Type</td>
+	                              <td align='right'>".$vehicle['type']."</td>
 	                          </tr>
 	                          <tr>
-	                              <td>Fuel Type</td>
-	                              <td>".$vehicle['capacity']."</td>
+	                              <td align='right'>Fuel Type</td>
+	                              <td align='right'>".$vehicle['capacity']."</td>
 	                          </tr></table>";
 
 	           $return['content'] .= "<h4>Vehicle service Details</h4>";
 	           $return['content'] .= "<table class='table table-bordered'><thead>
-	           <tr><th>Service Type</th><th>Prev Service Date</th><th>Next Service Date</th></tr>
+	           <tr><th align='right'>Service Type</th><th align='right'>Prev Service Date</th><th align='right'>Next Service Date</th></tr>
 	           </thead>
 	           <tbody>";
 	           foreach ($service as $key => $value) {
 	        	$return['content'] .= "
 	                          <tr>
-	                              <td>".$value->service_type."</td>
+	                              <td align='right'>".$value->service_type."</td>
 	                          
-	                              <td>".$value->prev_service_date."</td>
+	                              <td align='right'>".$value->prev_service_date."</td>
 	                          
-	                              <td>".$value->next_service_date."</td>
+	                              <td align='right'>".$value->next_service_date."</td>
 	                          </tr>";                  	
 	           }
 			$return['content'] .= "</tbody></table>";
@@ -336,20 +343,24 @@ return $data;
 
 			$return['content'] .= "<table class='table table-bordered'><tbody>
 	                          <tr>
-	                              <td>Name</td>
-	                              <td>".$driver['name']."</td>
+	                              <td align='right'>Name</td>
+	                              <td align='right'>".$driver['name']."</td>
 	                          </tr>
 	                          <tr>
-	                              <td>License Number</td>
-	                              <td>".$driver['license_number']."</td>
+	                              <td align='right'>Phone Number</td>
+	                              <td align='right'>".$driver['phone']."</td>
 	                          </tr>
 	                          <tr>
-	                              <td>Work Begin Date</td>
-	                              <td>".$driver['work_begin_date']."</td>
+	                              <td align='right'>License Number</td>
+	                              <td align='right'>".$driver['license_number']."</td>
 	                          </tr>
 	                          <tr>
-	                              <td>Work End Date</td>
-	                              <td>".$driver['work_end_date']."</td>
+	                              <td align='right'>Work Begin Date</td>
+	                              <td align='right'>".$driver['work_begin_date']."</td>
+	                          </tr>
+	                          <tr>
+	                              <td align='right'>Work End Date</td>
+	                              <td align='right'>".$driver['work_end_date']."</td>
 	                          </tr></table>";                               
 		}
 
